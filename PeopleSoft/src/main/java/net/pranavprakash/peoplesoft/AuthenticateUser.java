@@ -15,67 +15,64 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+/**
+ *
+ * @author Pranav
+ */
 @ManagedBean
 @SessionScoped
-public class AuthenticateUser
-  implements Serializable
-{
-  String userid;
-  String pwd;
+public class AuthenticateUser implements Serializable {
 
-  public String getUserid()
-  {
-    return this.userid;
-  }
+    String userid;
+    String pwd;
 
-  public void setUserid(String userid) {
-    this.userid = userid;
-  }
+    public String getUserid() {
+        return this.userid;
+    }
 
-  public String getPwd() {
-    return this.pwd;
-  }
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
 
-  public void setPwd(String pwd) {
-    this.pwd = pwd;
-  }
+    public String getPwd() {
+        return this.pwd;
+    }
 
-  public String doLogin()
-    throws Exception
-  {
-    String result = "pm:loginfailed?transition=flip";
-    DefaultHttpClient httpclient = new DefaultHttpClient();
-    try
-    {
-      HttpPost httpost = new HttpPost("http://www.hrcop.poornata.com:8994/psp/HRCOP/?cmd=login");
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
 
-      List nvps = new ArrayList();
-      nvps.add(new BasicNameValuePair("userid", this.userid));
-      nvps.add(new BasicNameValuePair("pwd", this.pwd));
+    public String doLogin()
+            throws Exception {
+        String result = "pm:loginfailed?transition=flip";
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        try {
+            HttpPost httpost = new HttpPost("http://www.hrcop.poornata.com:8994/psp/HRCOP/?cmd=login");
 
-      httpost.setEntity(new UrlEncodedFormEntity(nvps, Consts.UTF_8));
+            List nvps = new ArrayList();
+            nvps.add(new BasicNameValuePair("userid", this.userid));
+            nvps.add(new BasicNameValuePair("pwd", this.pwd));
 
-      HttpResponse response = httpclient.execute(httpost);
-      HttpEntity entity = response.getEntity();
-      EntityUtils.consume(entity);
+            httpost.setEntity(new UrlEncodedFormEntity(nvps, Consts.UTF_8));
 
-      List cookies = httpclient.getCookieStore().getCookies();
-      if ((!cookies.isEmpty()) && (response.getStatusLine().getStatusCode() == 302)) {
-        for (int i = 0; i < cookies.size(); i++) {
-          Cookie pscookie = (Cookie)cookies.get(i);
-          if ((pscookie.getName().equals("PS_TOKEN")) && (pscookie.getDomain().equals("www.hrcop.poornata.com")))
-          {
-            result = "pm:main?transition=flip";
-            break;
-          }
+            HttpResponse response = httpclient.execute(httpost);
+            HttpEntity entity = response.getEntity();
+            EntityUtils.consume(entity);
+
+            List cookies = httpclient.getCookieStore().getCookies();
+            if ((!cookies.isEmpty()) && (response.getStatusLine().getStatusCode() == 302)) {
+                for (int i = 0; i < cookies.size(); i++) {
+                    Cookie pscookie = (Cookie) cookies.get(i);
+                    if ((pscookie.getName().equals("PS_TOKEN")) && (pscookie.getDomain().equals("www.hrcop.poornata.com"))) {
+                        result = "pm:main?transition=flip";
+                        break;
+                    }
+                }
+            }
+
+        } finally {
+            httpclient.getConnectionManager().shutdown();
         }
-      }
-
+        return result;
     }
-    finally
-    {
-      httpclient.getConnectionManager().shutdown();
-    }
-    return result;
-  }
 }
