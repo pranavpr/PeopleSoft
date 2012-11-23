@@ -1,0 +1,81 @@
+<f:view xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pm="http://primefaces.org/mobile" contentType="text/html">
+    <pm:page title="Poornata Mobile">
+        <pm:view id="login">
+            <pm:header title="Poornata">
+            </pm:header>
+            <pm:content>
+                <h:form>
+                    <h:outputText value="Poornata ID"/>
+                    <p:inputText id="userid" type="text" value="#{authenticateUser.userid}"/>
+                    <h:outputText value="Password"/>
+                    <p:inputText id="pwd" type="password" value="#{authenticateUser.pwd}"/>
+                    <!--<p:commandButton value="Login" action="pm:main?transition=flip"/> -->
+                    <p:commandButton value="Login" action="#{authenticateUser.doLogin()}"/>
+                </h:form>
+            </pm:content>
+        </pm:view>
+         <pm:view id="loginfailed">                
+            <pm:header title="Poornata">
+                <f:facet name="left">
+                    <p:button value="Back" icon="back" href="#login?transition=reverse flip"/>
+                </f:facet>
+            </pm:header>
+            <pm:content>
+               <h:outputText value="Your User ID and/or Password are invalid." />
+            </pm:content>
+        </pm:view>
+        <pm:view id="main">                
+            <pm:header title="Poornata">
+                <f:facet name="left">
+                    <p:button value="Back" icon="back" href="#login?transition=reverse flip"/>
+                </f:facet>
+                <f:facet name="right">
+                    <p:button value="Home" icon="home" href="#main"/>
+                </f:facet>
+            </pm:header>
+            <pm:content>
+                <p:dataList type="inset">
+                    <f:facet name="header">Main Menu</f:facet>
+                    <h:outputLink value="#ess?transition=slide">Employee Self Service</h:outputLink>
+                    <h:outputLink value="#mss?transition=slide">Manager Self Service</h:outputLink>
+                </p:dataList>
+            </pm:content>
+        </pm:view>
+        <pm:view id="ess">
+            <pm:header title="Poornata">            
+                <f:facet name="left">
+                    <p:button value="Back" icon="back" href="#main?transition=reverse slide"/>
+                </f:facet>
+                <f:facet name="right">
+                    <p:button value="Home" icon="home" href="#main?transition=reverse flow"/>
+                </f:facet>
+            </pm:header>
+            <pm:content>
+                <p:dataList type="inset">
+                    <f:facet name="header">Employee Self Service</f:facet>
+                    <h:outputLink value="#elr">Leave Request</h:outputLink>
+                    <h:outputLink value="#evlb">View Leave Balance</h:outputLink>      
+                    <h:outputLink value="#evlh">View Leave History</h:outputLink>
+                </p:dataList>
+            </pm:content>
+        </pm:view>
+        <pm:view id="mss">
+            <pm:header title="Pooranata">            
+                <f:facet name="left">
+                    <p:button value="Back" icon="back" href="#main?transition=reverse slide"/>
+                </f:facet>
+                <f:facet name="right">
+                    <p:button value="Home" icon="home" href="#main?transition=reverse flow"/>
+                </f:facet>
+            </pm:header>
+            <pm:content>
+                <p:dataList type="inset">
+                    <f:facet name="header">Manager Self Service</f:facet>
+                    <h:outputLink value="#mlr">Leave Requests</h:outputLink>
+                    <h:outputLink value="#mvelh">View Employee Leave History</h:outputLink>
+                    <h:outputLink value="#mvelb">View Employee Leave Balances</h:outputLink>
+                </p:dataList>
+            </pm:content>
+        </pm:view>
+    </pm:page>
+</f:view>
